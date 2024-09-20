@@ -1,0 +1,80 @@
+/* Estilo general para el footer */
+.footer {
+  background-color: rgba(0, 0, 0, 0.8); /* Fondo oscuro con opacidad */
+  color: white; /* Color del texto */
+  padding: 2rem 1rem; /* Espaciado interno */
+  position: fixed; /* Fijar el footer en la parte inferior */
+  bottom: 0; /* Alineación en la parte inferior */
+  left: 0; /* Alineación a la izquierda */
+  width: 100%; /* Ancho completo */
+  text-align: center; /* Centrar el texto */
+  z-index: 100000; /* Asegurar que esté encima de otros elementos */
+  transform: translateY(100%); /* Inicialmente oculto fuera de la vista */
+  transition: transform 0.5s ease-in-out; /* Animación para mostrar el footer */
+}
+
+/* Mostrar el footer cuando se aplica la clase .show */
+.footer.show {
+  transform: translateY(0); /* Mostrar el footer en la vista */
+}
+
+/* Estilos globales para todos los elementos */
+*,
+::after,
+::before {
+  box-sizing: border-box; /* Incluir padding y border en el ancho y alto de los elementos */
+}
+
+/* Estilos específicos para el contenedor de la aplicación */
+.App {
+  text-align: center; /* Centrar el texto en la aplicación */
+}
+
+/* Estilos globales para el body */
+body {
+  font-family: "Roboto", sans-serif; /* Fuente del texto */
+  margin: 0; /* Eliminar margen predeterminado */
+  box-sizing: border-box; /* Incluir padding y border en el ancho y alto de los elementos */
+  background-color: #f8f9fa; /* Color de fondo claro */
+  color: #212529; /* Color del texto oscuro */
+}
+
+/* Estilos adicionales para body si no están siendo reemplazados */
+body {
+  font-family: var(--bs-body-font-family);
+  font-size: var(--bs-body-font-size);
+  font-weight: var(--bs-body-font-weight);
+  line-height: var(--bs-body-line-height);
+  color: var(--bs-body-color);
+  text-align: var(--bs-body-text-align);
+  background-color: var(--bs-body-bg);
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Estilos de fuentes de Font Awesome */
+:host,
+:root {
+  --fa-style-family-classic: "Font Awesome 6 Free";
+  --fa-font-solid: normal 900 1em / 1 "Font Awesome 6 Free";
+}
+
+:host,
+:root {
+  --fa-font-regular: normal 400 1em / 1 "Font Awesome 6 Free";
+}
+
+:host,
+:root {
+  --fa-style-family-brands: "Font Awesome 6 Brands";
+  --fa-font-brands: normal 400 1em / 1 "Font Awesome 6 Brands";
+}
+
+/* Puntos de ruptura de Bootstrap */
+:root {
+  --bs-breakpoint-xs: 0;
+  --bs-breakpoint-sm: 576px;
+  --bs-breakpoint-md: 768px;
+  --bs-breakpoint-xl: 1200px;
+  --bs-breakpoint-xxl: 1400px;
+}

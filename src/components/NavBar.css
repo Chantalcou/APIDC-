@@ -1,0 +1,46 @@
+/* Navbar Styling */
+.navbar {
+  background-color: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(1px);
+  transition: background-color 0.5s, transform 0.3s, opacity 0.3s;
+  padding: 0.5rem 1rem;
+  width: 100vw;
+}
+
+.navbar.scroll-hide {
+  opacity: 0; /* Hides the navbar */
+  transform: translateY(-100%); /* Moves the navbar out of view */
+}
+
+.navbar.scroll-show {
+  opacity: 1; /* Shows the navbar */
+  transform: translateY(0); /* Moves the navbar back into view */
+}
+
+.navbar-brand img {
+  width: 60px;
+  height: 60px;
+}
+
+.navbar-toggler {
+  border: none;
+}
+
+.navbar-nav .nav-link {
+  color: #ffffff;
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+  transition: color 0.3s;
+}
+
+.navbar-nav .nav-link:hover {
+  color: #f8f9fa;
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+  .navbar-nav .nav-link {
+    padding: 0.5rem;
+  }
+}
