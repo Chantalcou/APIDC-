@@ -1,9 +1,9 @@
+// Footer.js
 import React, { useEffect } from "react";
 import "./Footer.css";
 
 const Footer = () => {
   useEffect(() => {
-    // Crear un IntersectionObserver para detectar cuando se llega al final de la página
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -15,16 +15,14 @@ const Footer = () => {
           }
         });
       },
-      { threshold: 1.0 } // Se activa cuando el último elemento es completamente visible
+      { threshold: 1.0 } // Se activa cuando el sentinel es completamente visible
     );
 
-    // Seleccionamos el último elemento de la página para observarlo
     const sentinel = document.querySelector("#sentinel");
     if (sentinel) {
       observer.observe(sentinel);
     }
 
-    // Limpiar el observer cuando el componente se desmonte
     return () => observer.disconnect();
   }, []);
 
@@ -42,27 +40,15 @@ const Footer = () => {
           </div>
           <div className="footer-section">
             <p>Seguínos en:</p>
-            <a
-              href="https://facebook.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
               Facebook
             </a>{" "}
             |
-            <a
-              href="https://twitter.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
               Twitter
             </a>{" "}
             |
-            <a
-              href="https://instagram.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
               Instagram
             </a>
           </div>

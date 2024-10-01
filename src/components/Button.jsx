@@ -2,7 +2,7 @@ import React from "react";
 // import { Button } from "react-bootstrap";
 import "./Button.css";
 
-export const ButtonComponent = ({ text, onClick, color, customClass }) => {
+ const ButtonComponent = ({ text, onClick, color, customClass }) => {
   return (
     <button
       onClick={onClick}
@@ -17,3 +17,5 @@ export const ButtonComponent = ({ text, onClick, color, customClass }) => {
     </button>
   );
 };
+
+export default ButtonComponent;

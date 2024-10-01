@@ -1,87 +1,149 @@
+// NavBar.js
 import React, { useEffect, useState } from "react";
+import { Navbar, Nav, Container, Modal, Button } from "react-bootstrap";
+import { useAuth0 } from "@auth0/auth0-react";
+import { useNavigate } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
 import "./NavBar.css";
 
 const NavBar = () => {
-  const [isScrolling, setIsScrolling] = useState(false); // Detecta si está haciendo scroll
-  const [scrollPosition, setScrollPosition] = useState(0); // Guarda la posición de scroll
-  const [idleTimeout, setIdleTimeout] = useState(null); // Timeout para el estado inactivo
-  const [isIdle, setIsIdle] = useState(false); // Estado inactivo (no está haciendo scroll)
+  const { isAuthenticated, loginWithRedirect, logout, user, getAccessTokenSilently } = useAuth0();
+  const [isScrolling, setIsScrolling] = useState(false);
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const [dataSent, setDataSent] = useState(false); // Estado para evitar múltiples envíos
+  const [showWelcome, setShowWelcome] = useState(false); // Estado para mostrar el modal de bienvenida
+  const navigate = useNavigate();
 
+  // Manejo del scroll para mostrar/ocultar la navbar
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollPos = window.pageYOffset;
-
-      // Si está desplazándose hacia abajo
-      if (scrollPosition < currentScrollPos && currentScrollPos > 50) {
-        setIsScrolling(true);
-        setIsIdle(false);
-        clearTimeout(idleTimeout); // Limpia el timer cuando está haciendo scroll
-      } else {
-        setIsScrolling(false);
-      }
-
+      setIsScrolling(
+        currentScrollPos > 50 ? scrollPosition < currentScrollPos : false
+      );
       setScrollPosition(currentScrollPos);
-
-      // Configura un timeout para activar el estado inactivo
-      if (idleTimeout) clearTimeout(idleTimeout);
-      const timeout = setTimeout(() => {
-        setIsIdle(true);
-      }, 1000); // 1 segundo de inactividad antes de mostrar el navbar de nuevo
-      setIdleTimeout(timeout);
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
-      clearTimeout(idleTimeout); // Limpia el timeout cuando el componente se desmonta
     };
-  }, [scrollPosition, idleTimeout]);
+  }, [scrollPosition]);
+
+  // useEffect para enviar datos al backend cuando el usuario se autentica
+  useEffect(() => {
+    const sendUserData = async () => {
+      if (isAuthenticated && user && !dataSent) {
+        try {
+          const token = await getAccessTokenSilently();
+          console.log("Token obtenido:", token);
+
+          const response = await fetch("http://localhost:5000/register", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              email: user.email,
+              name: user.given_name,
+            }),
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const data = await response.json();
+          console.log("Respuesta del backend:", data);
+          setDataSent(true); // Marca que los datos ya fueron enviados
+          setShowWelcome(true); // Muestra el modal de bienvenida
+
+          // Redirige a la página de inicio después de 2 segundos
+          setTimeout(() => {
+            navigate("/");
+          }, 2000);
+        } catch (error) {
+          console.error("Error al enviar datos al backend:", error);
+        }
+      }
+    };
+
+    sendUserData();
+  }, [isAuthenticated, user, getAccessTokenSilently, dataSent, navigate]);
+
+  // Función para manejar el login
+  const handleLogin = () => {
+    loginWithRedirect(); // Redirige a / (configurado en Auth0Provider)
+  };
+
+  // Función para manejar el logout
+  const handleLogout = () => {
+    logout({ returnTo: window.location.origin });
+  };
+
+  // Funciones para manejar el modal de bienvenida
+  const handleCloseWelcome = () => setShowWelcome(false);
 
   return (
-    <nav
-      className={`navbar navbar-expand-lg navbar-light fixed-top ${
-        isIdle ? "scroll-show" : "scroll-hide"
-      }`}
-    >
-      <div className="container-navBar">
-        <a className="navbar-brand" href="/">
-          <img
-            src="https://res.cloudinary.com/dqgjcfosx/image/upload/v1725976604/APIDC-LOGO-01-121x121_qnzw4d.png"
-            alt="Logo"
-            width="60"
-            height="60"
-            className="d-inline-block align-top"
-          />
-        </a>
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNav"
-          aria-controls="navbarNav"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button>
-        <div className="collapse navbar-collapse" id="navbarNav">
-          <div className="navbar-nav ms-auto"> {/* Clase ms-auto para alinear a la derecha */}
-            <a className="nav-link" href="/">
-              INICIO
-            </a>
-            <a className="nav-link" href="/asociarme">
-              ASOCIARME
-            </a>
-            <a className="nav-link" href="/login">
-              LOGIN
-            </a>
-            <a className="nav-link" href="/contacto">
-              CONTACTO
-            </a>
-          </div>
-        </div>
-      </div>
-    </nav>
+    <>
+      <Navbar
+        expand="lg"
+        fixed="top"
+        className={`${isScrolling ? "scroll-hide" : "scroll-show"}`}
+        bg="dark"
+        variant="dark"
+      >
+        <Container>
+          <Navbar.Brand href="/">
+            <img
+              src="https://res.cloudinary.com/dqgjcfosx/image/upload/v1725976604/APIDC-LOGO-01-121x121_qnzw4d.png"
+              alt="Logo"
+              width="60"
+              height="60"
+              className="d-inline-block align-top"
+            />
+          </Navbar.Brand>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="ms-auto align-items-center">
+              <Nav.Link href="/">INICIO</Nav.Link>
+              <Nav.Link href="/contacto">CONTACTO</Nav.Link>
+              {isAuthenticated ? (
+                <>
+                  <Nav.Link href="#" className="d-flex align-items-center">
+                    <img
+                      src={user.picture}
+                      alt="Profile"
+                      className="profile-picture me-2"
+                    />
+                    <span className="user-name">{user.name}</span>
+                  </Nav.Link>
+                  <Nav.Link onClick={handleLogout}>LOGOUT</Nav.Link>
+                </>
+              ) : (
+                <Nav.Link onClick={handleLogin}>LOGIN</Nav.Link>
+              )}
+            </Nav>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
+
+      {/* Modal de Bienvenida */}
+      <Modal show={showWelcome} onHide={handleCloseWelcome} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>¡Bienvenido!</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Hola, {user?.name}. ¡Nos alegra verte de nuevo!
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={handleCloseWelcome}>
+            Cerrar
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
   );
 };
 

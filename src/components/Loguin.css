@@ -1,0 +1,29 @@
+.login-container {
+  position: absolute;
+  top: 50px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 20px;
+  z-index: 999;
+}
+
+.welcome-message {
+  color: white;
+  text-align: center;
+}
+
+.welcome-message h1 {
+  font-size: 1.8rem;
+  margin: 0;
+}
+
+.welcome-message .user-name {
+  font-weight: bold;
+}
+
+.welcome-message p {
+  font-size: 1rem;
+}

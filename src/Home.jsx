@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // Importa useNavigate
-
-import "bootstrap/dist/css/bootstrap.min.css";
 import NavBar from "./components/NavBar";
 import $ from "jquery";
 import ScrollArrow from "./components/ScrollArrow.jsx";
 import Footer from "./components/Footer.jsx";
-import { ButtonComponent } from "./components/Button";
+import  ButtonComponent  from "./components/Button";
+import "bootstrap/dist/css/bootstrap.min.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "./Home.css";
 
